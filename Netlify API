@@ -1,0 +1,333 @@
+// netlify/functions/tickets.js
+const { MongoClient } = require('mongodb');
+
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+
+// Helper function to connect to database
+async function connectToDatabase() {
+  if (!client.topology || !client.topology.isConnected()) {
+    await client.connect();
+  }
+  return client.db('eventbase');
+}
+
+// Helper function for CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+};
+
+// Generate ticket number
+function generateTicketNumber() {
+  return `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+}
+
+// Simulate payment processing (replace with actual payment gateway)
+async function processPayment(paymentData) {
+  // For demo purposes, we'll simulate payment success
+  // In real implementation, integrate with Paystack, Flutterwave, or other payment processors
+  
+  const { amount, email, reference } = paymentData;
+  
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Simulate 95% success rate
+  const isSuccess = Math.random() > 0.05;
+  
+  if (isSuccess) {
+    return {
+      success: true,
+      transactionId: `txn_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
+      reference,
+      amount,
+      status: 'completed'
+    };
+  } else {
+    return {
+      success: false,
+      error: 'Payment failed',
+      reference
+    };
+  }
+}
+
+// Send ticket email (using free email service like EmailJS)
+async function sendTicketEmail(ticketData) {
+  // In a real implementation, you would integrate with an email service
+  // For now, we'll just log the ticket data
+  console.log('Sending ticket email:', ticketData);
+  return { success: true };
+}
+
+exports.handler = async (event, context) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
+  }
+
+  try {
+    const db = await connectToDatabase();
+    const ticketsCollection = db.collection('tickets');
+    const eventsCollection = db.collection('events');
+    
+    const { httpMethod, path, body, headers } = event;
+    const pathParts = path.split('/').filter(Boolean);
+    
+    switch (httpMethod) {
+      case 'POST':
+        // Purchase ticket
+        const purchaseData = JSON.parse(body);
+        const { 
+          eventId, 
+          quantity, 
+          ticketType, 
+          customerInfo, 
+          paymentInfo 
+        } = purchaseData;
+        
+        // Validate required fields
+        if (!eventId || !quantity || !ticketType || !customerInfo || !paymentInfo) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: 'Missing required fields' 
+            })
+          };
+        }
+        
+        // Get event details
+        const event = await eventsCollection.findOne({ _id: eventId });
+        if (!event) {
+          return {
+            statusCode: 404,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: 'Event not found' 
+            })
+          };
+        }
+        
+        // Check ticket availability
+        const ticketTypeData = event.ticketTypes.find(t => t.type === ticketType);
+        if (!ticketTypeData) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: 'Invalid ticket type' 
+            })
+          };
+        }
+        
+        if (ticketTypeData.available < quantity) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: 'Not enough tickets available' 
+            })
+          };
+        }
+        
+        // Calculate total amount
+        const totalAmount = ticketTypeData.price * quantity;
+        
+        // Process payment
+        const paymentResult = await processPayment({
+          amount: totalAmount,
+          email: customerInfo.email,
+          reference: paymentInfo.reference
+        });
+        
+        if (!paymentResult.success) {
+          return {
+            statusCode: 400,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: paymentResult.error 
+            })
+          };
+        }
+        
+        // Create tickets
+        const tickets = [];
+        for (let i = 0; i < quantity; i++) {
+          const ticket = {
+            _id: generateTicketNumber(),
+            eventId: eventId,
+            eventTitle: event.title,
+            eventDate: event.date,
+            eventVenue: event.venue,
+            ticketType: ticketType,
+            price: ticketTypeData.price,
+            customerInfo: {
+              name: customerInfo.name,
+              email: customerInfo.email,
+              phone: customerInfo.phone
+            },
+            transactionId: paymentResult.transactionId,
+            purchaseDate: new Date(),
+            status: 'active',
+            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${generateTicketNumber()}`
+          };
+          tickets.push(ticket);
+        }
+        
+        // Save tickets to database
+        await ticketsCollection.insertMany(tickets);
+        
+        // Update event ticket availability
+        await eventsCollection.updateOne(
+          { _id: eventId, 'ticketTypes.type': ticketType },
+          { 
+            $inc: { 
+              'ticketTypes.$.available': -quantity,
+              ticketsSold: quantity,
+              revenue: totalAmount
+            }
+          }
+        );
+        
+        // Send ticket email
+        await sendTicketEmail({
+          tickets,
+          customerInfo,
+          event: {
+            title: event.title,
+            date: event.date,
+            venue: event.venue
+          }
+        });
+        
+        return {
+          statusCode: 201,
+          headers: corsHeaders,
+          body: JSON.stringify({ 
+            success: true, 
+            tickets,
+            transactionId: paymentResult.transactionId,
+            totalAmount
+          })
+        };
+        
+      case 'GET':
+        if (pathParts.length === 3) {
+          // Get ticket by ID
+          const ticketId = pathParts[2];
+          const ticket = await ticketsCollection.findOne({ _id: ticketId });
+          
+          if (!ticket) {
+            return {
+              statusCode: 404,
+              headers: corsHeaders,
+              body: JSON.stringify({ 
+                success: false, 
+                error: 'Ticket not found' 
+              })
+            };
+          }
+          
+          return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: true, ticket })
+          };
+        } else {
+          // Get tickets by email (query parameter)
+          const queryParams = new URLSearchParams(event.queryStringParameters);
+          const email = queryParams.get('email');
+          
+          if (!email) {
+            return {
+              statusCode: 400,
+              headers: corsHeaders,
+              body: JSON.stringify({ 
+                success: false, 
+                error: 'Email parameter required' 
+              })
+            };
+          }
+          
+          const tickets = await ticketsCollection.find({ 
+            'customerInfo.email': email,
+            status: 'active'
+          }).toArray();
+          
+          return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: true, tickets })
+          };
+        }
+        
+      case 'PUT':
+        // Update ticket status (for check-in)
+        const ticketId = pathParts[2];
+        const updateData = JSON.parse(body);
+        
+        const updatedTicket = await ticketsCollection.findOneAndUpdate(
+          { _id: ticketId },
+          { 
+            $set: { 
+              ...updateData, 
+              updatedAt: new Date() 
+            } 
+          },
+          { returnDocument: 'after' }
+        );
+        
+        if (!updatedTicket.value) {
+          return {
+            statusCode: 404,
+            headers: corsHeaders,
+            body: JSON.stringify({ 
+              success: false, 
+              error: 'Ticket not found' 
+            })
+          };
+        }
+        
+        return {
+          statusCode: 200,
+          headers: corsHeaders,
+          body: JSON.stringify({ 
+            success: true, 
+            ticket: updatedTicket.value 
+          })
+        };
+        
+      default:
+        return {
+          statusCode: 405,
+          headers: corsHeaders,
+          body: JSON.stringify({ 
+            success: false, 
+            error: 'Method not allowed' 
+          })
+        };
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      headers: corsHeaders,
+      body: JSON.stringify({ 
+        success: false, 
+        error: 'Internal server error' 
+      })
+    };
+  }
+};
