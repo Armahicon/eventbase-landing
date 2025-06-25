@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventBase Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #F5C842;
+            --secondary-orange: #FF9500;
+            --dark-charcoal: #1A1A1A;
+            --warm-black: #2D2D2D;
+            --light-cream: #FFF8E7;
+            --card-white: #FFFFFF;
+            --text-dark: #333333;
+            --success-green: #10B981;
+            --error-red: #EF4444;
+            --warning-orange: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #F5C842 0%, #FF9500 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: var(--card-white);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-cream);
+            border-radius: 15px;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--secondary-orange);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            opacity: 0.8;
+        }
+
+        .admin-nav {
+            background: var(--card-white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background: var(--light-cream);
+            color: var(--text-dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn.active,
+        .nav-btn:hover {
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-orange));
+            color: var(--dark-charcoal);
+            transform: translateY(-2px);
+        }
+
+        .admin-content {
+            background: var(--card-white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-cream);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-orange));
+            color: var(--dark-charcoal);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 196, 66, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--light-cream);
+            color: var(--text-dark);
+            border: 2px solid var(--primary-gold);
+        }
+
+        .btn-danger {
+            background: var(--error-red);
+            color: white;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .event-card {
+            background: var(--light-cream);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 5px solid var(--primary-gold);
+        }
+
+        .event-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            opacity: 0.8;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ticket-type-container {
+            border: 2px solid var(--light-cream);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .add-ticket-type {
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .remove-ticket-type {
+            background: var(--error-red);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-cream);
+            border-radius: 50%;
+            border-top-color: var(--primary-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .admin-stats {
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div>
+                <h1 class="admin-title">
+                    <i class="fas fa-cog"></i> EventBase Admin
+                </h1>
+                <p>Manage your events and track performance</p>
+            </div>
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEvents">0</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTickets">0</div>
+                    <div class="stat-label">Tickets Sold</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">₵0</div>
+                    <div class="stat-label">Revenue</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="admin-nav">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('dashboard')">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </button>
+                <button class="nav-btn" onclick="showSection('create-event')">
+                    <i class="fas fa-plus-circle"></i> Create Event
+                </button>
+                <button class="nav-btn" onclick="showSection('manage-events')">
+                    <i class="fas fa-calendar-alt"></i> Manage Events
+                </button>
+                <button class="nav-btn" onclick="showSection('tickets')">
+                    <i class="fas fa-ticket-alt"></i> Tickets
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <h2>📊 Dashboard Overview</h2>
+                <div class="events-grid" id="dashboardEvents">
+                    <!-- Recent events will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Create Event Section -->
+            <div id="create-event" class="section">
+                <h2>🎉 Create New Event</h2>
+                <form id="eventForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Event Title *</label>
+                            <input type="text" class="form-input" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select class="form-select" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="Music Concert">Music Concert</option>
+                                <option value="Festival">Festival</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Food & Drink">Food & Drink</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Art & Culture">Art & Culture</option>
+                                <option value="Business">Business</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description *</label>
+                        <textarea class="form-textarea" name="description" required placeholder="Describe your event..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date *</label>
+                            <input type="datetime-local" class="form-input" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Venue *</label>
+                            <input type="text" class="form-input" name="venue" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">City *</label>
+                            <input type="text" class="form-input" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Image URL</label>
+                            <input type="url" class="form-input" name="imageUrl" placeholder="https://example.com/
