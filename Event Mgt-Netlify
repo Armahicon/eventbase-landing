@@ -1,0 +1,183 @@
+// netlify/functions/events.js
+const { MongoClient } = require('mongodb');
+
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+
+// Helper function to connect to database
+async function connectToDatabase() {
+  if (!client.topology || !client.topology.isConnected()) {
+    await client.connect();
+  }
+  return client.db('eventbase');
+}
+
+// Helper function for CORS
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+};
+
+exports.handler = async (event, context) => {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
+  }
+
+  try {
+    const db = await connectToDatabase();
+    const eventsCollection = db.collection('events');
+    
+    const { httpMethod, path, body, headers } = event;
+    const pathParts = path.split('/').filter(Boolean);
+    
+    // Authentication check for admin operations
+    const isAdmin = headers.authorization === `Bearer ${process.env.ADMIN_TOKEN}`;
+    
+    switch (httpMethod) {
+      case 'GET':
+        if (pathParts.length === 2) {
+          // Get all events
+          const events = await eventsCollection.find({ status: 'active' }).toArray();
+          return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: true, events })
+          };
+        } else if (pathParts.length === 3) {
+          // Get single event
+          const eventId = pathParts[2];
+          const event = await eventsCollection.findOne({ _id: eventId });
+          
+          if (!event) {
+            return {
+              statusCode: 404,
+              headers: corsHeaders,
+              body: JSON.stringify({ success: false, error: 'Event not found' })
+            };
+          }
+          
+          return {
+            statusCode: 200,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: true, event })
+          };
+        }
+        break;
+        
+      case 'POST':
+        if (!isAdmin) {
+          return {
+            statusCode: 401,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: false, error: 'Unauthorized' })
+          };
+        }
+        
+        const eventData = JSON.parse(body);
+        const newEvent = {
+          ...eventData,
+          _id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          status: 'active',
+          ticketsSold: 0,
+          revenue: 0
+        };
+        
+        await eventsCollection.insertOne(newEvent);
+        
+        return {
+          statusCode: 201,
+          headers: corsHeaders,
+          body: JSON.stringify({ success: true, event: newEvent })
+        };
+        
+      case 'PUT':
+        if (!isAdmin) {
+          return {
+            statusCode: 401,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: false, error: 'Unauthorized' })
+          };
+        }
+        
+        const eventId = pathParts[2];
+        const updateData = JSON.parse(body);
+        
+        const updatedEvent = await eventsCollection.findOneAndUpdate(
+          { _id: eventId },
+          { 
+            $set: { 
+              ...updateData, 
+              updatedAt: new Date() 
+            } 
+          },
+          { returnDocument: 'after' }
+        );
+        
+        if (!updatedEvent.value) {
+          return {
+            statusCode: 404,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: false, error: 'Event not found' })
+          };
+        }
+        
+        return {
+          statusCode: 200,
+          headers: corsHeaders,
+          body: JSON.stringify({ success: true, event: updatedEvent.value })
+        };
+        
+      case 'DELETE':
+        if (!isAdmin) {
+          return {
+            statusCode: 401,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: false, error: 'Unauthorized' })
+          };
+        }
+        
+        const deleteId = pathParts[2];
+        const deletedEvent = await eventsCollection.findOneAndUpdate(
+          { _id: deleteId },
+          { $set: { status: 'deleted', updatedAt: new Date() } },
+          { returnDocument: 'after' }
+        );
+        
+        if (!deletedEvent.value) {
+          return {
+            statusCode: 404,
+            headers: corsHeaders,
+            body: JSON.stringify({ success: false, error: 'Event not found' })
+          };
+        }
+        
+        return {
+          statusCode: 200,
+          headers: corsHeaders,
+          body: JSON.stringify({ success: true, message: 'Event deleted successfully' })
+        };
+        
+      default:
+        return {
+          statusCode: 405,
+          headers: corsHeaders,
+          body: JSON.stringify({ success: false, error: 'Method not allowed' })
+        };
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      statusCode: 500,
+      headers: corsHeaders,
+      body: JSON.stringify({ success: false, error: 'Internal server error' })
+    };
+  }
+};
