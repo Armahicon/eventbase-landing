@@ -9,17 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --primary-orange: #ff6b35;
-            --secondary-yellow: #ffd23f;
-            --accent-pink: #ff006e;
-            --accent-purple: #8338ec;
-            --dark-text: #1a1a1a;
-            --light-text: #ffffff;
-            --dark-bg: #0d1117;
-            --card-bg: #ffffff;
-            --gradient-1: linear-gradient(135deg, #ff6b35 0%, #ffd23f 100%);
-            --gradient-2: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
-            --gradient-3: linear-gradient(135deg, #06ffa5 0%, #3d5afe 100%);
+            --primary-gold: #F5C842;
+            --secondary-orange: #FF9500;
+            --accent-warm: #FFB84D;
+            --dark-charcoal: #1A1A1A;
+            --warm-black: #2D2D2D;
+            --light-cream: #FFF8E7;
+            --card-white: #FFFFFF;
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+            --gradient-warm: linear-gradient(135deg, #F5C842 0%, #FF9500 100%);
+            --gradient-sunset: linear-gradient(135deg, #FFB84D 0%, #FF6B35 100%);
+            --gradient-evening: linear-gradient(135deg, #FF9500 0%, #FF6B35 100%);
         }
 
         * {
@@ -30,15 +31,15 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ff6b35 0%, #ffd23f 20%, #ff006e 60%, #8338ec 100%);
+            background: linear-gradient(135deg, #F5C842 0%, #FFB84D 25%, #FF9500 75%, #FF6B35 100%);
             background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            color: var(--dark-text);
+            animation: warmGradientShift 20s ease infinite;
+            color: var(--text-dark);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        @keyframes gradientShift {
+        @keyframes warmGradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -47,26 +48,42 @@
         /* Floating Elements Animation */
         .floating-element {
             position: absolute;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+            opacity: 0.08;
+            animation: gentleFloat 8s ease-in-out infinite;
+            color: var(--dark-charcoal);
         }
         
-        .floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-element:nth-child(1) { 
+            top: 15%; 
+            left: 10%; 
+            animation-delay: 0s; 
+            font-size: 2.5rem;
+        }
+        .floating-element:nth-child(2) { 
+            top: 60%; 
+            right: 15%; 
+            animation-delay: 3s; 
+            font-size: 3rem;
+        }
+        .floating-element:nth-child(3) { 
+            bottom: 25%; 
+            left: 20%; 
+            animation-delay: 6s; 
+            font-size: 2rem;
+        }
 
-        @keyframes float {
+        @keyframes gentleFloat {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
         }
 
         /* Header Section */
         header {
             position: relative;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-            color: var(--light-text);
-            padding: 8rem 2rem;
+            background: linear-gradient(rgba(26,26,26,0.6), rgba(26,26,26,0.4)), 
+                        url('https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            color: var(--text-light);
+            padding: 6rem 2rem;
             text-align: center;
             min-height: 100vh;
             display: flex;
@@ -78,54 +95,66 @@
 
         .floating-element {
             font-size: 3rem;
-            color: var(--primary-orange);
+            color: var(--primary-gold);
         }
 
-        .logo-container {
-            margin-bottom: 2rem;
-            animation: bounceIn 1s ease-out;
+        .brand-container {
+            margin-bottom: 3rem;
+            animation: slideInDown 1s ease-out;
         }
 
-        .logo {
+        .logo-image {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(245, 196, 66, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-image:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .brand-name {
             font-family: 'Montserrat', sans-serif;
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 900;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
-            letter-spacing: -2px;
+            color: var(--primary-gold);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            letter-spacing: -1px;
         }
 
         .hero h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 4.5rem;
+            font-size: 4rem;
             font-weight: 900;
             margin-bottom: 1.5rem;
             text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
             animation: slideInUp 1s ease-out 0.3s forwards;
             opacity: 0;
-            background: linear-gradient(45deg, #fff, #ffd23f);
+            background: linear-gradient(45deg, #FFFFFF, #F5C842);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .hero .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 3rem;
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
             animation: slideInUp 1s ease-out 0.5s forwards;
             opacity: 0;
-            font-weight: 300;
+            font-weight: 400;
+            color: #FFB84D;
         }
 
         .hero .tagline {
             font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            margin-bottom: 3rem;
+            opacity: 0;
             animation: fadeIn 1s ease-out 0.7s forwards;
+            color: var(--light-cream);
         }
 
         .cta-buttons {
@@ -153,40 +182,47 @@
         }
 
         .cta-primary {
-            background: var(--gradient-1);
-            color: var(--light-text);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            background: var(--gradient-warm);
+            color: var(--dark-charcoal);
+            box-shadow: 0 8px 25px rgba(245, 196, 66, 0.4);
         }
 
         .cta-secondary {
             background: transparent;
-            color: var(--light-text);
-            border: 3px solid var(--light-text);
+            color: var(--text-light);
+            border: 3px solid var(--primary-gold);
         }
 
         .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
+            transform: translateY(-8px) scale(1.08);
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
         .cta-primary:hover {
-            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.6);
+            box-shadow: 0 15px 35px rgba(245, 196, 66, 0.6);
+            background: var(--gradient-sunset);
+        }
+
+        .cta-secondary:hover {
+            background: var(--primary-gold);
+            color: var(--dark-charcoal);
         }
 
         /* Stats Section */
         .stats-bar {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            margin: -3rem auto 0;
-            border-radius: 20px;
-            max-width: 900px;
+            backdrop-filter: blur(15px);
+            padding: 2.5rem;
+            margin: -4rem auto 0;
+            border-radius: 25px;
+            max-width: 1000px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(245, 196, 66, 0.2);
             position: relative;
             z-index: 10;
+            border: 2px solid var(--accent-warm);
         }
 
         .stat-item {
@@ -194,9 +230,9 @@
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            background: var(--gradient-2);
+            background: var(--gradient-warm);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -204,7 +240,7 @@
         }
 
         .stat-label {
-            color: var(--dark-text);
+            color: var(--text-dark);
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.9rem;
@@ -223,7 +259,7 @@
             font-weight: 900;
             text-align: center;
             margin-bottom: 3rem;
-            background: var(--gradient-2);
+            background: var(--gradient-evening);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -232,9 +268,9 @@
         .section-subtitle {
             text-align: center;
             font-size: 1.2rem;
-            color: var(--dark-text);
+            color: var(--warm-black);
             margin-bottom: 4rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         /* Events Grid */
@@ -247,15 +283,16 @@
         }
 
         .event-card {
-            background: var(--card-bg);
+            background: var(--card-white);
             border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(245, 196, 66, 0.15);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             height: 100%;
             display: flex;
             flex-direction: column;
+            border: 2px solid transparent;
         }
 
         .event-card::before {
@@ -264,8 +301,8 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: var(--gradient-1);
+            height: 5px;
+            background: var(--gradient-warm);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -275,8 +312,9 @@
         }
 
         .event-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(245, 196, 66, 0.25);
+            border-color: var(--accent-warm);
         }
 
         .event-image {
@@ -298,12 +336,12 @@
         }
 
         .event-category {
-            background: var(--gradient-3);
-            color: var(--light-text);
-            padding: 0.5rem 1rem;
+            background: var(--gradient-warm);
+            color: var(--dark-charcoal);
+            padding: 0.6rem 1.2rem;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 1rem;
@@ -314,13 +352,14 @@
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--dark-text);
+            color: var(--text-dark);
         }
 
         .event-details {
             color: #666;
             margin-bottom: 1.5rem;
             flex-grow: 1;
+            line-height: 1.6;
         }
 
         .event-meta {
@@ -328,28 +367,30 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: #f8f9fa;
+            padding: 1.2rem;
+            background: var(--light-cream);
             border-radius: 15px;
+            border-left: 4px solid var(--primary-gold);
         }
 
         .event-date, .event-price {
             font-weight: 600;
-            color: var(--dark-text);
+            color: var(--text-dark);
         }
 
         .event-price {
-            background: var(--gradient-1);
+            background: var(--gradient-warm);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 900;
         }
 
         .event-button {
-            background: var(--gradient-2);
-            color: var(--light-text);
-            padding: 1rem 2rem;
+            background: var(--gradient-evening);
+            color: var(--text-light);
+            padding: 1.2rem 2rem;
             border: none;
             border-radius: 25px;
             font-weight: 700;
@@ -361,43 +402,46 @@
         }
 
         .event-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 0, 110, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+            background: var(--gradient-sunset);
         }
 
         /* Featured Event Hero */
         .featured-event {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+            background: linear-gradient(rgba(26,26,26,0.7), rgba(26,26,26,0.5)), 
                         url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=2070&auto=format&fit=crop') center/cover;
             padding: 6rem 2rem;
             text-align: center;
-            color: var(--light-text);
-            margin: 4rem 0;
+            color: var(--text-light);
+            margin: 4rem auto;
             border-radius: 30px;
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            border: 3px solid var(--primary-gold);
         }
 
         .featured-badge {
-            background: var(--gradient-1);
-            padding: 0.8rem 2rem;
+            background: var(--gradient-warm);
+            color: var(--dark-charcoal);
+            padding: 1rem 2.5rem;
             border-radius: 30px;
-            font-weight: 700;
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 2rem;
             display: inline-block;
+            font-size: 1.1rem;
         }
 
         /* How It Works */
         .how-it-works {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border-radius: 30px;
             max-width: 1200px;
             margin: 0 auto;
             padding: 4rem;
+            border: 2px solid var(--accent-warm);
         }
 
         .steps-grid {
@@ -413,29 +457,30 @@
         }
 
         .step-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-1);
+            width: 90px;
+            height: 90px;
+            background: var(--gradient-warm);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            font-size: 2rem;
-            color: var(--light-text);
+            font-size: 2.2rem;
+            color: var(--dark-charcoal);
+            box-shadow: 0 10px 25px rgba(245, 196, 66, 0.3);
         }
 
         .step-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--dark-text);
+            color: var(--text-dark);
         }
 
         /* Organizer Section */
         .organizer-section {
-            background: var(--dark-bg);
-            color: var(--light-text);
+            background: var(--dark-charcoal);
+            color: var(--text-light);
             border-radius: 30px;
             max-width: 1200px;
             margin: 4rem auto;
@@ -443,6 +488,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 3px solid var(--primary-gold);
         }
 
         .organizer-section::before {
@@ -452,8 +498,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 107, 53, 0.1), transparent);
-            animation: rotate 10s linear infinite;
+            background: conic-gradient(from 0deg, transparent, rgba(245, 196, 66, 0.1), transparent);
+            animation: rotate 15s linear infinite;
         }
 
         @keyframes rotate {
@@ -466,10 +512,29 @@
             z-index: 2;
         }
 
+        .organizer-button {
+            background: var(--gradient-warm);
+            color: var(--dark-charcoal);
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .organizer-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(245, 196, 66, 0.4);
+        }
+
         /* Footer */
         footer {
-            background: var(--dark-bg);
-            color: var(--light-text);
+            background: var(--dark-charcoal);
+            color: var(--text-light);
             padding: 4rem 2rem 2rem;
             text-align: center;
         }
@@ -485,39 +550,50 @@
 
         .footer-section h3 {
             margin-bottom: 1.5rem;
-            color: var(--primary-orange);
+            color: var(--primary-gold);
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-gold);
         }
 
         .social-icons {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             justify-content: center;
             margin-top: 2rem;
         }
 
         .social-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--gradient-1);
+            width: 55px;
+            height: 55px;
+            background: var(--gradient-warm);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--light-text);
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
+            color: var(--dark-charcoal);
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .social-icon:hover {
-            transform: translateY(-5px) scale(1.1);
+            transform: translateY(-8px) scale(1.15);
+            box-shadow: 0 10px 25px rgba(245, 196, 66, 0.4);
         }
 
         /* Animations */
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes slideInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         @keyframes slideInUp {
@@ -532,8 +608,9 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .logo { font-size: 2.5rem; }
+            .hero h1 { font-size: 2.8rem; }
+            .brand-name { font-size: 2.2rem; }
+            .logo-image { width: 100px; height: 100px; }
             .cta-buttons { flex-direction: column; align-items: center; }
             .cta-button { width: 100%; max-width: 300px; }
             .events-grid { grid-template-columns: 1fr; }
@@ -544,9 +621,10 @@
 
         @media (max-width: 480px) {
             header { padding: 4rem 1rem; }
-            .hero h1 { font-size: 2.5rem; }
+            .hero h1 { font-size: 2.2rem; }
             .section-title { font-size: 2.5rem; }
             .events-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .featured-event { padding: 4rem 1.5rem; }
         }
     </style>
 </head>
@@ -557,16 +635,19 @@
     <div class="floating-element"><i class="fas fa-star"></i></div>
 
     <header>
-        <div class="logo-container">
-            <div class="logo">EventBase</div>
+        <div class="brand-container">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==" alt="EventBase Logo" class="logo-image" style="background: linear-gradient(135deg, #F5C842 0%, #FF9500 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; color: #1A1A1A;">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="brand-name">EventBase</div>
         </div>
         <div class="hero">
             <h1>Ghana's Ultimate Event Experience</h1>
-            <p class="subtitle">From Afrobeats concerts to fashion shows - discover, book, and experience the pulse of Ghana</p>
+            <p class="subtitle">From Afrobeats concerts to cultural festivals - discover, book, and experience the heartbeat of Ghana</p>
             <p class="tagline">🎵 Music • 🎭 Culture • 🎨 Fashion • 🍽️ Food • 🎪 Entertainment</p>
             <div class="cta-buttons">
                 <a href="#events" class="cta-button cta-primary">
-                    <i class="fas fa-rocket"></i> Explore Events
+                    <i class="fas fa-search"></i> Explore Events
                 </a>
                 <a href="#organizer" class="cta-button cta-secondary">
                     <i class="fas fa-plus-circle"></i> Host Event
@@ -578,15 +659,15 @@
     <!-- Stats Bar -->
     <div class="stats-bar">
         <div class="stat-item">
-            <span class="stat-number">50K+</span>
+            <span class="stat-number">75K+</span>
             <span class="stat-label">Happy Attendees</span>
         </div>
         <div class="stat-item">
-            <span class="stat-number">500+</span>
+            <span class="stat-number">800+</span>
             <span class="stat-label">Events Hosted</span>
         </div>
         <div class="stat-item">
-            <span class="stat-number">100+</span>
+            <span class="stat-number">150+</span>
             <span class="stat-label">Event Organizers</span>
         </div>
         <div class="stat-item">
@@ -598,21 +679,21 @@
     <!-- Featured Event -->
     <section class="featured-event">
         <div class="featured-badge">🔥 Trending Now</div>
-        <h2 style="font-size: 3rem; margin-bottom: 1rem;">Burna Boy Live in Accra</h2>
-        <p style="font-size: 1.3rem; margin-bottom: 2rem;">The African Giant returns to Ghana for an exclusive concert experience</p>
-        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-            <span style="background: rgba(255,255,255,0.2); padding: 1rem 2rem; border-radius: 25px;">
-                <i class="fas fa-calendar"></i> Dec 31, 2025
+        <h2 style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary-gold);">Sarkodie Live in Concert</h2>
+        <p style="font-size: 1.3rem; margin-bottom: 2rem;">The King of Ghana rap returns with his biggest concert yet!</p>
+        <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <span style="background: rgba(245,196,66,0.2); padding: 1rem 2rem; border-radius: 25px; border: 2px solid var(--primary-gold);">
+                <i class="fas fa-calendar"></i> Dec 28, 2025
             </span>
-            <span style="background: rgba(255,255,255,0.2); padding: 1rem 2rem; border-radius: 25px;">
-                <i class="fas fa-map-marker-alt"></i> Accra Sports Stadium
+            <span style="background: rgba(245,196,66,0.2); padding: 1rem 2rem; border-radius: 25px; border: 2px solid var(--primary-gold);">
+                <i class="fas fa-map-marker-alt"></i> Independence Square
             </span>
-            <span style="background: rgba(255,255,255,0.2); padding: 1rem 2rem; border-radius: 25px;">
-                <i class="fas fa-users"></i> 40,000 Capacity
+            <span style="background: rgba(245,196,66,0.2); padding: 1rem 2rem; border-radius: 25px; border: 2px solid var(--primary-gold);">
+                <i class="fas fa-users"></i> 50,000 Capacity
             </span>
         </div>
-        <a href="#" class="cta-button cta-primary" style="margin-top: 2rem; display: inline-block;">
-            Get VIP Tickets - GH₵200
+        <a href="#" class="cta-button cta-primary" style="display: inline-block;">
+            Get VIP Tickets - GH₵250
         </a>
     </section>
 
@@ -626,11 +707,11 @@
                 <div class="event-content">
                     <div class="event-category">Music Concert</div>
                     <h3 class="event-title">Kizz Daniel Live in Accra</h3>
-                    <p class="event-details">Experience the Afro-pop sensation with special guest appearances from Ghana's top artists.</p>
+                    <p class="event-details">Experience the Afro-pop sensation with special guest appearances from Ghana's top artists including Kwesi Arthur and Wendy Shay.</p>
                     <div class="event-meta">
                         <div class="event-date">
                             <i class="fas fa-calendar"></i> July 6, 2025<br>
-                            <small>Independence Square</small>
+                            <small><i class="fas fa-map-marker-alt"></i> Independence Square</small>
                         </div>
                         <div class="event-price">From GH₵80</div>
                     </div>
@@ -643,11 +724,11 @@
                 <div class="event-content">
                     <div class="event-category">Music Festival</div>
                     <h3 class="event-title">Detty Rave 2025</h3>
-                    <p class="event-details">Ghana's biggest annual music festival featuring international and local stars.</p>
+                    <p class="event-details">Ghana's biggest annual music festival featuring Burna Boy, Wizkid, Stonebwoy, and many more international and local stars.</p>
                     <div class="event-meta">
                         <div class="event-date">
                             <i class="fas fa-calendar"></i> Dec 20, 2025<br>
-                            <small>Accra Sports Stadium</small>
+                            <small><i class="fas fa-map-marker-alt"></i> Accra Sports Stadium</small>
                         </div>
                         <div class="event-price">From GH₵150</div>
                     </div>
@@ -660,11 +741,11 @@
                 <div class="event-content">
                     <div class="event-category">Fashion</div>
                     <h3 class="event-title">Accra Fashion Week 2025</h3>
-                    <p class="event-details">Showcasing the best of African fashion with top designers and models.</p>
+                    <p class="event-details">Showcasing the best of African fashion with top designers, international models, and exclusive runway shows.</p>
                     <div class="event-meta">
                         <div class="event-date">
                             <i class="fas fa-calendar"></i> Aug 15-18, 2025<br>
-                            <small>Trade Fair Centre</small>
+                            <small><i class="fas fa-map-marker-alt"></i> Trade Fair Centre</small>
                         </div>
                         <div class="event-price">From GH₵120</div>
                     </div>
@@ -676,75 +757,4 @@
                 <img src="https://images.unsplash.com/photo-1527224538127-2104bb2c1b72?q=80&w=2071&auto=format&fit=crop" alt="Comedy Show" class="event-image">
                 <div class="event-content">
                     <div class="event-category">Comedy</div>
-                    <h3 class="event-title">Laugh Out Loud Accra</h3>
-                    <p class="event-details">A night of non-stop laughter with Ghana's finest comedians and surprise guests.</p>
-                    <div class="event-meta">
-                        <div class="event-date">
-                            <i class="fas fa-calendar"></i> Sep 10, 2025<br>
-                            <small>National Theatre</small>
-                        </div>
-                        <div class="event-price">From GH₵60</div>
-                    </div>
-                    <a href="#" class="event-button">Book Now</a>
-                </div>
-            </div>
-
-            <div class="event-card">
-                <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=2070&auto=format&fit=crop" alt="Cultural Festival" class="event-image">
-                <div class="event-content">
-                    <div class="event-category">Culture</div>
-                    <h3 class="event-title">Ghanaian Heritage Festival</h3>
-                    <p class="event-details">Celebrate rich traditions, vibrant culture, and authentic Ghanaian experiences.</p>
-                    <div class="event-meta">
-                        <div class="event-date">
-                            <i class="fas fa-calendar"></i> Oct 5-7, 2025<br>
-                            <small>Arts Centre</small>
-                        </div>
-                        <div class="event-price">From GH₵40</div>
-                    </div>
-                    <a href="#" class="event-button">Experience</a>
-                </div>
-            </div>
-
-            <div class="event-card">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop" alt="Food Festival" class="event-image">
-                <div class="event-content">
-                    <div class="event-category">Food & Drinks</div>
-                    <h3 class="event-title">Accra Food & Drink Fest</h3>
-                    <p class="event-details">A culinary journey through Ghanaian delights and international cuisines.</p>
-                    <div class="event-meta">
-                        <div class="event-date">
-                            <i class="fas fa-calendar"></i> Nov 12, 2025<br>
-                            <small>Efua Sutherland Park</small>
-                        </div>
-                        <div class="event-price">From GH₵35</div>
-                    </div>
-                    <a href="#" class="event-button">Taste Now</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="how-it-works">
-            <h2 class="section-title">How It Works</h2>
-            <div class="steps-grid">
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <h3 class="step-title">Discover</h3>
-                    <p>Browse through hundreds of exciting events happening across Ghana. Filter by category, date, and location.</p>
-                </div>
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <h3 class="step-title">Book Securely</h3>
-                    <p>Purchase tickets safely with Mobile Money, bank cards, or other convenient payment methods.</p>
-                </div>
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h3 class="step-title">Enjoy</h3>
+                    <h3 class
