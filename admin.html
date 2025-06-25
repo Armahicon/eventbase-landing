@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventBase Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #fff3e0;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form, .event-list {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 0.5rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      background-color: #ffa751;
+      color: white;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .event-item {
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 0;
+    }
+    .event-item:last-child {
+      border-bottom: none;
+    }
+    .event-item h3 {
+      margin: 0.2rem 0;
+    }
+    .event-actions button {
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎛️ EventBase Admin Panel</h1>
+
+  <form id="eventForm">
+    <h2>Add / Edit Event</h2>
+    <input type="hidden" id="eventIndex" />
+    <label>Title:</label>
+    <input type="text" id="title" required />
+
+    <label>Date & Venue:</label>
+    <input type="text" id="date" required />
+
+    <label>Image URL:</label>
+    <input type="text" id="image" required />
+
+    <button type="submit">Save Event</button>
+  </form>
+
+  <div class="event-list" id="eventList">
+    <h2>📋 Event List</h2>
+  </div>
+
+  <script>
+    const eventForm = document.getElementById('eventForm');
+    const eventList = document.getElementById('eventList');
+    const title = document.getElementById('title');
+    const date = document.getElementById('date');
+    const image = document.getElementById('image');
+    const eventIndex = document.getElementById('eventIndex');
+
+    function loadEvents() {
+      const events = JSON.parse(localStorage.getItem('events') || '[]');
+      eventList.innerHTML = '<h2>📋 Event List</h2>';
+      events.forEach((ev, i) => {
+        const div = document.createElement('div');
+        div.className = 'event-item';
+        div.innerHTML = `
+          <h3>${ev.title}</h3>
+          <p>${ev.date}</p>
+          <img src="${ev.image}" style="width:100%; max-height:150px; object-fit:cover;" />
+          <div class="event-actions">
+            <button onclick="editEvent(${i})">Edit</button>
+            <button onclick="deleteEvent(${i})">Delete</button>
+          </div>
+        `;
+        eventList.appendChild(div);
+      });
+    }
+
+    function editEvent(index) {
+      const events = JSON.parse(localStorage.getItem('events') || '[]');
+      const ev = events[index];
+      title.value = ev.title;
+      date.value = ev.date;
+      image.value = ev.image;
+      eventIndex.value = index;
+    }
+
+    function deleteEvent(index) {
+      let events = JSON.parse(localStorage.getItem('events') || '[]');
+      events.splice(index, 1);
+      localStorage.setItem('events', JSON.stringify(events));
+      loadEvents();
+    }
+
+    eventForm.onsubmit = (e) => {
+      e.preventDefault();
+      let events = JSON.parse(localStorage.getItem('events') || '[]');
+      const newEvent = {
+        title: title.value,
+        date: date.value,
+        image: image.value
+      };
+      if (eventIndex.value === '') {
+        events.push(newEvent);
+      } else {
+        events[parseInt(eventIndex.value)] = newEvent;
+        eventIndex.value = '';
+      }
+      localStorage.setItem('events', JSON.stringify(events));
+      eventForm.reset();
+      loadEvents();
+    };
+
+    loadEvents();
+  </script>
+</body>
+</html>
