@@ -1,160 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EventBase - Ghana's Hottest Events</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #ffe259, #ffa751);
-      color: #333;
-    }
-    header {
-      background: url('https://images.unsplash.com/photo-1529692236671-f1dc89c4f0d7?fit=crop&w=1600&q=80') center/cover no-repeat;
-      color: white;
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-    header img {
-      max-width: 120px;
-      margin-bottom: 1rem;
-    }
-    .hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-    }
-    .buttons a {
-      margin: 0.5rem;
-      padding: 1rem 1.5rem;
-      background: #000;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 30px;
-      font-weight: 600;
-      transition: background 0.3s;
-    }
-    .buttons a:hover {
-      background: #333;
-    }
-    .section {
-      padding: 3rem 2rem;
-    }
-    .events {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-    .event {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.3s;
-    }
-    .event:hover {
-      transform: scale(1.02);
-    }
-    .event img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .event-content {
-      padding: 1rem;
-    }
-    .event h3 {
-      margin-top: 0;
-    }
-    .event a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: #ffa751;
-      color: #fff;
-      border-radius: 20px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .how-it-works, .organizer {
-      background: #fff3e0;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-    }
-    footer {
-      background: #222;
-      color: #ccc;
-      text-align: center;
-      padding: 1.5rem;
-    }
-    footer a {
-      color: #ffa751;
-      text-decoration: none;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventBase - Ghana's Hottest Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet"> <style>
+        :root {
+            --primary-orange: #ffa751;
+            --secondary-yellow: #ffe259;
+            --dark-text: #333;
+            --light-text: #fff;
+            --dark-bg: #222;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, var(--secondary-yellow), var(--primary-orange));
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* --- Header Section --- */
+        header {
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1514525253164-816b14299?fit=crop&w=1920&q=80') center/cover no-repeat; /* More dynamic concert shot */
+            color: var(--light-text);
+            padding: 6rem 2rem; /* Increased padding for more space */
+            text-align: center;
+            overflow: hidden;
+        }
+
+        header::before { /* Overlay for better text readability */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Darker overlay */
+            z-index: 1;
+        }
+
+        header > * { /* Bring content above overlay */
+            position: relative;
+            z-index: 2;
+        }
+
+        header img {
+            max-width: 150px; /* Slightly larger logo */
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)); /* Subtle glow for logo */
+        }
+
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif; /* Punchier font */
+            font-size: 3.5rem; /* Larger and more impactful */
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.7); /* Stronger shadow */
+            animation: fadeInDown 1s ease-out; /* Animation for heading */
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out 0.2s forwards; /* Animation for subheading */
+            opacity: 0; /* Start hidden for animation */
+        }
+
+        .buttons a {
+            margin: 0.75rem; /* Slightly more spacing */
+            padding: 1.2rem 2rem; /* Larger buttons */
+            background: var(--primary-orange); /* Changed button background to orange */
+            color: var(--dark-text); /* Dark text for contrast */
+            text-decoration: none;
+            border-radius: 50px; /* More rounded */
+            font-weight: 700; /* Bolder text */
+            transition: all 0.3s ease; /* Smooth transition */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: inline-block; /* Ensure padding works */
+            animation: zoomIn 0.6s ease-out 0.4s forwards; /* Animation for buttons */
+            opacity: 0; /* Start hidden for animation */
+        }
+
+        .buttons a:nth-child(2) { animation-delay: 0.5s; } /* Stagger animation */
+        .buttons a:nth-child(3) { animation-delay: 0.6s; }
+
+        .buttons a:hover {
+            background: #ff8c3c; /* Slightly darker orange on hover */
+            transform: translateY(-3px) scale(1.05); /* Lift and grow slightly */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- General Section Styling --- */
+        .section {
+            padding: 4rem 2rem; /* More vertical padding */
+            text-align: center;
+        }
+
+        .section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--dark-text);
+            position: relative;
+        }
+
+        .section h2::after { /* Underline effect for headings */
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-orange);
+            border-radius: 2px;
+        }
+
+        /* --- Events Section --- */
+        .events {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
+            gap: 2.5rem; /* Increased gap */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .event {
+            background: var(--light-text);
+            border-radius: 18px; /* More rounded corners */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* Stronger shadow */
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease; /* Smoother animation */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event:hover {
+            transform: translateY(-8px) scale(1.03); /* Lift and grow more */
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        .event img {
+            width: 100%;
+            height: 220px; /* Slightly taller images */
+            object-fit: cover;
+            border-bottom: 4px solid var(--primary-orange); /* Accent border */
+        }
+
+        .event-content {
+            padding: 1.5rem; /* More padding */
+            flex-grow: 1; /* Make content stretch */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Push button to bottom */
+        }
+
+        .event h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            color: var(--dark-text);
+        }
+
+        .event p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.2rem;
+        }
+
+        .event a {
+            display: inline-block;
+            margin-top: auto; /* Pushes button to the bottom */
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-orange);
+            color: var(--light-text); /* White text for contrast */
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .event a:hover {
+            background: #e68a3c;
+            transform: translateY(-2px);
+        }
+
+        /* --- How It Works & Organizer Sections --- */
+        .how-it-works, .organizer {
+            background: var(--light-text); /* Changed to white for consistency */
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 3rem auto; /* Center the sections */
+            padding: 3.5rem 3rem; /* More padding */
+        }
+
+        .how-it-works p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .how-it-works strong {
+            color: var(--primary-orange); /* Highlight steps */
+        }
+
+        .organizer p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .organizer a {
+            background: var(--dark-bg); /* Dark button for contrast */
+            color: var(--light-text);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .organizer a:hover {
+            background: #444;
+            transform: translateY(-3px);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--dark-bg);
+            color: #bbb; /* Lighter grey for text */
+            text-align: center;
+            padding: 2rem; /* More padding */
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary-orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ffc08a;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .buttons a {
+                padding: 1rem 1.5rem;
+                margin: 0.4rem;
+            }
+            .section {
+                padding: 3rem 1.5rem;
+            }
+            .section h2 {
+                font-size: 2rem;
+            }
+            .event img {
+                height: 180px;
+            }
+            .how-it-works, .organizer {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 4rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .buttons a {
+                display: block; /* Stack buttons on small screens */
+                margin: 0.5rem auto;
+                max-width: 250px;
+            }
+            .section h2 {
+                font-size: 1.8rem;
+            }
+            .events {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="EventBase Logo">
-    <div class="hero">
-      <h1>Your gateway to Ghana’s hottest events</h1>
-      <div class="buttons">
-        <a href="#events">Browse Events</a>
-        <a href="#organizer">Host an Event</a>
-        <a href="admin.html">Admin Panel</a>
-      </div>
-    </div>
-  </header>
-
-  <section class="section" id="events">
-    <h2 style="text-align:center;">🔥 Featured Events</h2>
-    <div class="events">
-      <div class="event">
-        <img src="https://images.unsplash.com/photo-1542317854-9a5edc5a7ca0?fit=crop&w=900&q=80" alt="Kizz Daniel Concert">
-        <div class="event-content">
-          <h3>Kizz Daniel Live in Accra</h3>
-          <p>July 6, 2025 | Independence Square</p>
-          <a href="#">Get Ticket</a>
+    <header>
+        <img src="https://i.imgur.com/your-eventbase-logo.png" alt="EventBase Logo"> <div class="hero">
+            <h1>Experience Ghana's Pulse. Discover Your Next Unforgettable Event!</h1>
+            <p>From electrifying concerts to captivating fashion shows, we've got your tickets.</p>
+            <div class="buttons">
+                <a href="#events">Explore Events</a>
+                <a href="#organizer">Host Your Event</a>
+                <a href="admin.html">Admin Panel</a>
+            </div>
         </div>
-      </div>
-      <div class="event">
-        <img src="https://images.unsplash.com/photo-1549921296-3a63f3b3c47b?fit=crop&w=900&q=80" alt="Detty Rave">
-        <div class="event-content">
-          <h3>Detty Rave 2025</h3>
-          <p>December 20, 2025 | Accra Sports Stadium</p>
-          <a href="#">Get Ticket</a>
+    </header>
+
+    <section class="section" id="events">
+        <h2>🔥 Featured Events</h2>
+        <div class="events">
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1598284841793-276707b66978?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGNvbmNlcnR8fHx8fHwxNzA4ODAwMDQ2&ixlib=rb-4.0.3&q=80&w=400" alt="Kizz Daniel Concert">
+                <div class="event-content">
+                    <h3>Kizz Daniel Live in Accra</h3>
+                    <p>Experience the Afro-pop sensation! <br>July 6, 2025 | Independence Square</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1517457210338-b788dc652591?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGZlc3RpdmFsfHx8fHx8MTcwODgwMDA0Ng&ixlib=rb-4.0.3&q=80&w=400" alt="Detty Rave">
+                <div class="event-content">
+                    <h3>Detty Rave 2025</h3>
+                    <p>Ghana's biggest annual music festival!<br>December 20, 2025 | Accra Sports Stadium</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1509653818314-e59275084920?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGZhcytoaW9uLHJ1bnwayfHx8fHwxNzA4ODAwMDQ2&ixlib=rb-4.0.3&q=80&w=400" alt="Accra Fashion Week">
+                <div class="event-content">
+                    <h3>Accra Fashion Week</h3>
+                    <p>Showcasing the best of African fashion.<br>August 15-18, 2025 | Trade Fair Centre</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1520690184462-c8206979261f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGNvbWVkeV9zaG93fHx8fHx8MTcwODgwMDEyNQ&ixlib=rb-4.0.3&q=80&w=400" alt="Comedy Show">
+                <div class="event-content">
+                    <h3>Laugh Out Loud Accra</h3>
+                    <p>A night of Ghana's finest comedians.<br>September 10, 2025 | National Theatre</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1549725841-f09bd162c906?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGN1bHR1cmFsX2V2ZW50fHx8fHx8MTcwODgwMDEyNQ&ixlib=rb-4.0.3&q=80&w=400" alt="Cultural Festival">
+                <div class="event-content">
+                    <h3>Ghanaian Heritage Festival</h3>
+                    <p>Celebrate rich traditions and vibrant culture.<br>October 5-7, 2025 | Arts Centre</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
+            <div class="event">
+                <img src="https://images.unsplash.com/photo-1526478832961-c85265691062?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=250&ixid=MnwxfDB8MXxyYW5kb218fGNoZWZfZXZlbnR8fHx8fHwxNzA4ODAwMTI2&ixlib=rb-4.0.3&q=80&w=400" alt="Food Festival">
+                <div class="event-content">
+                    <h3>Accra Food & Drink Fest</h3>
+                    <p>A culinary journey through Ghanaian delights.<br>November 12, 2025 | Efua Sutherland Park</p>
+                    <a href="#">Get Tickets</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="event">
-        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=900&q=80" alt="Accra Fashion Week">
-        <div class="event-content">
-          <h3>Accra Fashion Week</h3>
-          <p>August 15-18, 2025 | Trade Fair Centre</p>
-          <a href="#">Get Ticket</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section how-it-works">
-    <h2>✨ How It Works</h2>
-    <p><strong>1.</strong> Discover exciting events<br>
-       <strong>2.</strong> Pay with MoMo or Card<br>
-       <strong>3.</strong> Instantly get your QR ticket</p>
-  </section>
+    <section class="section how-it-works">
+        <h2>✨ Your Event Journey, Simplified</h2>
+        <p>
+            <strong>1. Discover:</strong> Explore a diverse range of Ghana’s most exciting events. <br>
+            <strong>2. Pay:</strong> Secure your spot seamlessly with Mobile Money or Card. <br>
+            <strong>3. Go:</strong> Receive your instant QR ticket and dive into the experience!
+        </p>
+    </section>
 
-  <section class="section organizer" id="organizer">
-    <h2>🎤 Host Your Event on EventBase</h2>
-    <p>Sell tickets to thousands for free. Let us power your success.</p>
-    <a href="#" style="display:inline-block; background:#000; color:#fff; padding:0.8rem 1.2rem; border-radius:30px; text-decoration:none; font-weight:600;">Get Started</a>
-  </section>
+    <section class="section organizer" id="organizer">
+        <h2>🎤 Ready to Host Your Own Unforgettable Event?</h2>
+        <p>List your event on EventBase and reach thousands of passionate attendees. We empower your success, for free!</p>
+        <a href="#" style="display:inline-block; background:#000; color:#fff; padding:0.8rem 1.2rem; border-radius:30px; text-decoration:none; font-weight:600;">Let's Get Started</a>
+    </section>
 
-  <footer>
-    <p>Contact | WhatsApp | Instagram | © 2025 <a href="#">EventBase</a></p>
-  </footer>
+    <footer>
+        <p>Connect with us: <a href="#">Contact</a> | <a href="#">WhatsApp</a> | <a href="#">Instagram</a></p>
+        <p>&copy; 2025 EventBase. All rights reserved.</p>
+    </footer>
 </body>
 </html>
