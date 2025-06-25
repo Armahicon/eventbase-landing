@@ -4,59 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EventBase - Ghana's Hottest Events</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f8f5f0;
+      background: linear-gradient(to right, #ffe259, #ffa751);
       color: #333;
     }
     header {
-      background-color: #f5b100;
+      background: url('https://images.unsplash.com/photo-1529692236671-f1dc89c4f0d7?fit=crop&w=1600&q=80') center/cover no-repeat;
       color: white;
-      padding: 2rem;
+      padding: 4rem 2rem;
       text-align: center;
     }
     header img {
-      max-width: 100px;
+      max-width: 120px;
       margin-bottom: 1rem;
     }
     .hero h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
     }
     .buttons a {
       margin: 0.5rem;
-      padding: 0.8rem 1.2rem;
-      background: black;
-      color: white;
+      padding: 1rem 1.5rem;
+      background: #000;
+      color: #fff;
       text-decoration: none;
-      border-radius: 4px;
-      display: inline-block;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .buttons a:hover {
+      background: #333;
+    }
+    .section {
+      padding: 3rem 2rem;
     }
     .events {
-      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
     }
     .event {
-      background: white;
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .event:hover {
+      transform: scale(1.02);
     }
     .event img {
       width: 100%;
-      border-radius: 4px;
+      height: 200px;
+      object-fit: cover;
     }
-    .how-it-works, .organizer, footer {
-      padding: 2rem;
-      background: #fff;
+    .event-content {
+      padding: 1rem;
+    }
+    .event h3 {
+      margin-top: 0;
+    }
+    .event a {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #ffa751;
+      color: #fff;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .how-it-works, .organizer {
+      background: #fff3e0;
+      border-radius: 8px;
+      margin-bottom: 2rem;
     }
     footer {
-      background: #eee;
+      background: #222;
+      color: #ccc;
       text-align: center;
-      font-size: 0.9rem;
+      padding: 1.5rem;
+    }
+    footer a {
+      color: #ffa751;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -68,44 +105,56 @@
       <div class="buttons">
         <a href="#events">Browse Events</a>
         <a href="#organizer">Host an Event</a>
+        <a href="admin.html">Admin Panel</a>
       </div>
     </div>
   </header>
 
-  <section class="events" id="events">
-    <h2>Featured Events</h2>
-    <div class="event">
-      <h3>Kizz Daniel Live in Accra</h3>
-      <p>Date: July 6, 2025 | Location: Independence Square</p>
-      <a href="#">Get Ticket</a>
-    </div>
-    <div class="event">
-      <h3>Detty Rave 2025</h3>
-      <p>Date: December 20, 2025 | Location: Accra Sports Stadium</p>
-      <a href="#">Get Ticket</a>
-    </div>
-    <div class="event">
-      <h3>Accra Fashion Week</h3>
-      <p>Date: August 15-18, 2025 | Location: Ghana International Trade Fair Centre</p>
-      <a href="#">Get Ticket</a>
+  <section class="section" id="events">
+    <h2 style="text-align:center;">🔥 Featured Events</h2>
+    <div class="events">
+      <div class="event">
+        <img src="https://images.unsplash.com/photo-1542317854-9a5edc5a7ca0?fit=crop&w=900&q=80" alt="Kizz Daniel Concert">
+        <div class="event-content">
+          <h3>Kizz Daniel Live in Accra</h3>
+          <p>July 6, 2025 | Independence Square</p>
+          <a href="#">Get Ticket</a>
+        </div>
+      </div>
+      <div class="event">
+        <img src="https://images.unsplash.com/photo-1549921296-3a63f3b3c47b?fit=crop&w=900&q=80" alt="Detty Rave">
+        <div class="event-content">
+          <h3>Detty Rave 2025</h3>
+          <p>December 20, 2025 | Accra Sports Stadium</p>
+          <a href="#">Get Ticket</a>
+        </div>
+      </div>
+      <div class="event">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?fit=crop&w=900&q=80" alt="Accra Fashion Week">
+        <div class="event-content">
+          <h3>Accra Fashion Week</h3>
+          <p>August 15-18, 2025 | Trade Fair Centre</p>
+          <a href="#">Get Ticket</a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="how-it-works">
-    <h2>How It Works</h2>
-    <p><strong>1.</strong> Browse events<br>
-       <strong>2.</strong> Pay via MoMo or Card<br>
-       <strong>3.</strong> Get a QR code ticket instantly</p>
+  <section class="section how-it-works">
+    <h2>✨ How It Works</h2>
+    <p><strong>1.</strong> Discover exciting events<br>
+       <strong>2.</strong> Pay with MoMo or Card<br>
+       <strong>3.</strong> Instantly get your QR ticket</p>
   </section>
 
-  <section class="organizer" id="organizer">
-    <h2>Host Your Event on EventBase</h2>
-    <p>Post your event and sell tickets for free. No technical knowledge needed.</p>
-    <a href="#">Get Started</a>
+  <section class="section organizer" id="organizer">
+    <h2>🎤 Host Your Event on EventBase</h2>
+    <p>Sell tickets to thousands for free. Let us power your success.</p>
+    <a href="#" style="display:inline-block; background:#000; color:#fff; padding:0.8rem 1.2rem; border-radius:30px; text-decoration:none; font-weight:600;">Get Started</a>
   </section>
 
   <footer>
-    <p>Contact | WhatsApp | Instagram | © 2025 EventBase</p>
+    <p>Contact | WhatsApp | Instagram | © 2025 <a href="#">EventBase</a></p>
   </footer>
 </body>
 </html>
